@@ -217,18 +217,15 @@ If you want to search and replace the pattern in the entire file, use the percen
  {
   "exporterServerSettings": {
     "port": 9561,
-    "host": "0.0.0.0"
+    "host": "192.168.0.x"   <<---- Do update 
   },
   "qbtSettings": {
-    "webUiAddress": "http://localhost:8080"
+    "webUiAddress": "http://192.168.0.x:8080"   << Do update
   },
   "collectorSettings": {
     "maindataCollectors": {
       "serverState": {
-        "allTimeUploadBytes": false,
-        "networkUploadSpeedBytesPerSecond": false,  <- Chang ethis to True
-        "allTimeShareRatio": false,
-        "diskWriteCacheOverloadPercent": false,
+        "allTimeUploadBytes": true,
 
 
 **prometheus-qbittorrent-exporter
