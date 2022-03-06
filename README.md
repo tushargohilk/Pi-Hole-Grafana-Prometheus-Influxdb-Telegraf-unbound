@@ -193,14 +193,43 @@ chown -R grafana:grafana /usr/share/grafana
 
 Useful Links
 
-https://github.com/fru1tstand/qbittorrent-exporter
-https://github.com/fru1tstand/qbittorrent-exporter/releases
-https://github.com/esanchezm/prometheus-qbittorrent-exporter
-https://raw.githubusercontent.com/esanchezm/prometheus-qbittorrent-exporter/master/grafana/dashboard.json
+1 https://github.com/fru1tstand/qbittorrent-exporter
+1 https://github.com/fru1tstand/qbittorrent-exporter/releases (Download)
+
+2 https://github.com/esanchezm/prometheus-qbittorrent-exporter
+2 https://raw.githubusercontent.com/esanchezm/prometheus-qbittorrent-exporter/master/grafana/dashboard.json
 
 **qbittorrent-exporter
 Run java -jar <qbt-exporter.jar> [flag].
 /usr/bin/java -jar /etc/prometheus/qbt-exporter-fat-1.0.0-release.jar
+       
+root@xxxxt:/etc/init.d# java -jar qbt-exporter-fat-1.0.0-release.jar
+No settings file found, creating one at /etc/init.d/qbt-exporter-settings.json.
+[main] INFO org.eclipse.jetty.util.log - Logging initialized @11474ms to org.eclipse.jetty.util.log.Slf4jLog
+[main] INFO ktor.application - No ktor.deployment.watch patterns specified, automatic reload is not active
+
+Sample qbt-exporter-settings.json ( change value from False to True)
+      
+If you want to search and replace the pattern in the entire file, use the percentage character % as a range. This character indicates a range from the first to the last line of the file:
+
+:%s/foo/bar/g
+      
+ {
+  "exporterServerSettings": {
+    "port": 9561,
+    "host": "0.0.0.0"
+  },
+  "qbtSettings": {
+    "webUiAddress": "http://localhost:8080"
+  },
+  "collectorSettings": {
+    "maindataCollectors": {
+      "serverState": {
+        "allTimeUploadBytes": false,
+        "networkUploadSpeedBytesPerSecond": false,  <- Chang ethis to True
+        "allTimeShareRatio": false,
+        "diskWriteCacheOverloadPercent": false,
+
 
 **prometheus-qbittorrent-exporter
 
