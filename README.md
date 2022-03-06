@@ -7,20 +7,23 @@ IMP Docs and Links
 **Configuring Unbound as a simple forwarding DNS server  (linux VM)
 https://www.redhat.com/sysadmin/forwarding-dns-2
 
-**Configuring Unbound Docker\
+**Configuring Unbound Docker 
 
-docker run -detach=true \
---name=my-unbound1 \
---volume /volume1/docker/unbound:/opt/unbound/etc/unbound/ \
+docker run --detach=true \
+--name=my-unbound \
+--volume=/volume1/docker/unbound:/opt/unbound/etc/unbound/ \
+--cap-add NET_ADMIN \
 --publish=53:53/tcp \
 --publish=53:53/udp \
---env "ServerIP=192.168.0.x" \
---network VLAN1_pi-hole \
---ip "192.168.0.x" \
+--env "ServerIP=192.168.0.4" \
+--env "DNSMASQ_LISTENING=all \
+--ip "192.168.0.4" \
 mvance/unbound:latest
-unbound.conf
 
+
+unbound.conf
 server:
+do-ip6: no
 cache-max-ttl: 14400
 cache-min-ttl: 300
 hide-identity: yes
@@ -30,24 +33,66 @@ prefetch: yes
 qname-minimisation: yes
 rrset-roundrobin: yes
 use-caps-for-id: yes
+username: "_unbound"
+aggressive-nsec: yes
+do-not-query-localhost: no
+neg-cache-size: 4M
+qname-minimisation: yes
+deny-any: yes
+harden-algo-downgrade: yes
+harden-below-nxdomain: yes
+harden-dnssec-stripped: yes
+harden-glue: yes
+harden-large-queries: yes
+harden-referral-path: no
+harden-short-bufsize: yes
+hide-http-user-agent: no
+hide-identity: yes
+hide-version: yes
+http-user-agent: "DNS"
+identity: "DNS"
+private-address: 10.0.0.0/8
+private-address: 172.16.0.0/12
+private-address: 192.168.0.0/16
+private-address: 169.254.0.0/16
+ratelimit: 1000
+unwanted-reply-threshold: 10000
+use-caps-for-id: yes
+val-clean-additional: yes
+tls-cert-bundle: /etc/ssl/certs/ca-certificates.crt
+infra-cache-slabs: 4
+incoming-num-tcp: 10
+key-cache-slabs: 4
+msg-cache-size: 1591685802
+msg-cache-slabs: 4
+num-queries-per-thread: 4096
+num-threads: 3
+outgoing-range: 8192
+rrset-cache-size: 3183371605
+rrset-cache-slabs: 4
+minimal-responses: yes
+prefetch: yes
+prefetch-key: yes
+serve-expired: yes
+so-reuseport: yes
+
 # If no logfile is specified, syslog is used
-logfile: "/var/log/unbound/unbound.log"
-verbosity: 0
-interface: 192.168.0.x
-interface: ::0 
+logfile: "/opt/unbound/etc/unbound/unbound.log"
+verbosity: 4
+interface: 0.0.0.0
+interface: ::0
 Access-control: 127.0.0.0/8 allow  # (allow queries from the local host)
 access-control: 192.168.0.0/24 allow
-access-control: 192.168.1.0/24 allow
+access-control: 0.0.0.0/24 allow
+access-control: 192.168.0.0/24 allow
 domain-insecure: "forest.local"
+#file to read root hints from.
+root-hints: "/opt/unbound/etc/unbound/root.hints"
 port: 53
-stub-zone:
-        name: "forest"
-        stub-addr: 192.168.0.x
-        stub-first: yes
 forward-zone:
       name: "."
       forward-addr: 1.1.1.1
-      forward-addr: 1.1.1.2
+      forward-addr: 8.8.8.8
 
 ********************************************************************************************************************************************************************************
 **Install and Start Pi-Hole**
